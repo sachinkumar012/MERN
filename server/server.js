@@ -1,49 +1,35 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const express = require('express'); // Include the express module
+const express = require('express');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./src/routes/authRoutes');
 const linksRoutes = require('./src/routes/linksRoutes');
 const userRoutes = require('./src/routes/userRoutes');
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const cors = require('cors');
-    const app = express(); // Instantiate express app.
+const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000",   // frontend origin
-  credentials: true                 // allow cookies to be sent
+    origin: "http://localhost:3000",
+    credentials: true
 }));
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch((error) => console.log(error));
 
-
-    app.use('/auth', authRoutes);
-
-
-app.use((request, response, next) => {
-    // Skip json middleware for the webhook endpoint
-    if (request.originalUrl.startsWith('/payments/webhook')) {
-        return next();
-    }
-
-    express.json()(request, response, next);
-});
+// Standard middleware for all routes
+app.use(express.json());
 app.use(cookieParser());
 
-const corsOptions = {
-    origin: process.env.CLIENT_ENDPOINT,
-    credentials: true
-};
-app.use(cors(corsOptions));
+// Register routes
 app.use('/auth', authRoutes);
 app.use('/links', linksRoutes);
 app.use('/users', userRoutes);
 app.use('/payments', paymentRoutes);
 
 const PORT = 5001;
-app.listen(5001, (error) => {
+app.listen(PORT, (error) => {
     if (error) {
         console.log('Error starting the server: ', error);
     } else {

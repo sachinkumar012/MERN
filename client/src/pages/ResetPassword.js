@@ -3,10 +3,11 @@ import { useState } from "react";
 import axios from "axios";
 import { serverEndpoint } from "../config/config";
 
-function ResetPassword() {
+function ResetPassword({ email: emailProp = "", hideEmailField = false, onSuccess }) {
     const location = useLocation();
     const navigate = useNavigate();
-    const emailFromState = location.state?.email || "";
+    const emailFromState = location.state?.email || emailProp;
+    const shouldHideEmail = hideEmailField || !!emailProp || !!location.state?.email;
 
     const [formData, setFormData] = useState({
         email: emailFromState,
@@ -23,12 +24,25 @@ function ResetPassword() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Frontend validation
+        if (!formData.email || !formData.code || !formData.newPassword) {
+            setError("Please fill in all fields.");
+            return;
+        }
         try {
             await axios.post(`${serverEndpoint}/auth/reset-password`, formData);
             setMessage("Password reset successful.");
-            setTimeout(() => navigate("/"), 1500); // Go back to login
+            setError("");
+            setTimeout(() => {
+                if (onSuccess) {
+                    onSuccess();
+                } else {
+                    navigate("/");
+                }
+            }, 1500);
         } catch (err) {
-            setError("Failed to reset password. Check code or try again.");
+            let backendMsg = err?.response?.data?.message;
+            setError(backendMsg || "Failed to reset password. Check code or try again.");
         }
     };
 
@@ -38,7 +52,7 @@ function ResetPassword() {
             {message && <div className="alert alert-success">{message}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
-                {!emailFromState && (
+                {!shouldHideEmail && (
                     <div className="mb-3">
                         <label>Email</label>
                         <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} />
