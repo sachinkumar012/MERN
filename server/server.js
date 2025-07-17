@@ -28,7 +28,7 @@ app.use('/links', linksRoutes);
 app.use('/users', userRoutes);
 app.use('/payments', paymentRoutes);
 
-const PORT = 5001;
+const PORT = process.env.PORT ||5001;
 app.listen(PORT, (error) => {
     if (error) {
         console.log('Error starting the server: ', error);
