@@ -106,10 +106,12 @@ const authController = {
             const token = jwt.sign(user, secret, { expiresIn: '1h' });
             response.cookie('jwtToken', token, {
                 httpOnly: true,
-                secure: true,
-                domain: 'localhost',
-                path: '/'
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
             });
+            
+            
             response.json({ user: user, message: 'User authenticated' });
         } catch (error) {
             console.log(error);
@@ -170,10 +172,12 @@ const authController = {
 
             response.cookie('jwtToken', token, {
                 httpOnly: true,
-                secure: true,
-                domain: 'localhost',
-                path: '/'
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
             });
+            
+            
             response.json({ message: 'User registered', user: userDetails });
         } catch (error) {
             console.log(error);
@@ -220,10 +224,12 @@ const authController = {
             const token = jwt.sign(user, secret, { expiresIn: '1h' });
             response.cookie('jwtToken', token, {
                 httpOnly: true,
-                secure: true,
-                domain: 'localhost',
-                path: '/'
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
             });
+            
+            
             response.json({ user: user, message: 'User authenticated' });
         } catch (error) {
             console.log(error);
