@@ -102,91 +102,79 @@ function Register() {
     };
 
     return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-md-4">
-                    <h2 className="text-center mb-4">Sign up with a new account</h2>
+        <section className="card register-card">
+            <h2 className="text-center mb-4">Sign up with a new account</h2>
 
-                    {/* Error Alert */}
-                    {errors.message && (
-                        <div className="alert alert-danger" role="alert">
-                            {errors.message}
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="name" className="form-label">Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                            />
-                            {errors.name && (
-                                <div className="invalid-feedback">
-                                    {errors.name}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="username" className="form-label">Username</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.username ? 'is-invalid' : ''}`}
-                                id="username"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                            />
-                            {errors.username && (
-                                <div className="invalid-feedback">
-                                    {errors.username}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input
-                                type="password"
-                                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
-                            {errors.password && (
-                                <div className="invalid-feedback">
-                                    {errors.password}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="d-grid">
-                            <button type="submit" className="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-
-                    <div className="text-center">
-                        <div className="my-4 d-flex align-items-center text-muted">
-                            <hr className="flex-grow-1" />
-                            <span className="px-2">OR</span>
-                            <hr className="flex-grow-1" />
-                        </div>
-                        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-                            <GoogleLogin
-                                onSuccess={handleGoogleSignin}
-                                onError={handleGoogleSigninFailure}
-                            />
-                        </GoogleOAuthProvider>
-                    </div>
+            {errors.message && (
+                <div className="form-error" role="alert">
+                    {errors.message}
                 </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="form">
+                <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className={errors.name ? 'input-error' : ''}
+                        autoComplete="name"
+                    />
+                    {errors.name && (
+                        <div className="input-error-text">{errors.name}</div>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        className={errors.username ? 'input-error' : ''}
+                        autoComplete="username"
+                    />
+                    {errors.username && (
+                        <div className="input-error-text">{errors.username}</div>
+                    )}
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className={errors.password ? 'input-error' : ''}
+                        autoComplete="new-password"
+                    />
+                    {errors.password && (
+                        <div className="input-error-text">{errors.password}</div>
+                    )}
+                </div>
+
+                <button type="submit" className="btn-primary full-width">Submit</button>
+            </form>
+
+            <div className="divider-row">
+                <span>OR</span>
             </div>
-        </div>
+            <div className="google-login-row">
+                <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSignin}
+                        onError={handleGoogleSigninFailure}
+                    />
+                </GoogleOAuthProvider>
+            </div>
+        </section>
     );
 }
 

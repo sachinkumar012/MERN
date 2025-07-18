@@ -43,50 +43,27 @@ function Subscription() {
     };
 
     return (
-        <div className="container py-5">
-            {errors.message && <div className="alert alert-danger">{errors.message}</div>}
-            {message && <div className="alert alert-success">{message}</div>}
+        <section className="subscription-section">
+            {errors.message && <div className="form-error">{errors.message}</div>}
+            {message && <div className="form-success">{message}</div>}
 
-            <div className="row justify-content-center">
-                <div className="col-5">
-                    <div className="card w-100 mb-3">
-                        <div className="card-body">
-                            <h3 className="card-title">Subscription Summary</h3>
-                            <hr />
-                            <p className="card-text">
-                                <div className="pb-2">
-                                    <strong>Start Date: </strong> {formatDate(subscription.start)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>End Date: </strong> {formatDate(subscription.end)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Last Payment Date: </strong> {formatDate(subscription.lastBillDate)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Next Payment Date: </strong> {formatDate(subscription.nextBillDate)}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Total Payments Made: </strong> {subscription.paymentsMade}
-                                </div>
-
-                                <div className="pb-2">
-                                    <strong>Payments Remaining: </strong> {subscription.paymentsRemaining}
-                                </div>
-                            </p>
-                            <hr />
-                            <div className="text-center">
-                                <button className="btn btn-danger w-50" onClick={() => handleCancel()}>Cancel</button>
-                            </div>
-                        </div>
-                    </div>
+            <div className="card subscription-card">
+                <h3 className="subscription-title">Subscription Summary</h3>
+                <hr />
+                <div className="subscription-details">
+                    <div><strong>Start Date:</strong> {formatDate(subscription.start)}</div>
+                    <div><strong>End Date:</strong> {formatDate(subscription.end)}</div>
+                    <div><strong>Last Payment Date:</strong> {formatDate(subscription.lastBillDate)}</div>
+                    <div><strong>Next Payment Date:</strong> {formatDate(subscription.nextBillDate)}</div>
+                    <div><strong>Total Payments Made:</strong> {subscription.paymentsMade}</div>
+                    <div><strong>Payments Remaining:</strong> {subscription.paymentsRemaining}</div>
+                </div>
+                <hr />
+                <div className="subscription-actions">
+                    <button className="btn-danger full-width" onClick={handleCancel}>Cancel Subscription</button>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
 

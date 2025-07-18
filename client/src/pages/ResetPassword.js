@@ -47,28 +47,28 @@ function ResetPassword({ email: emailProp = "", hideEmailField = false, onSucces
     };
 
     return (
-        <div className="container mt-5 col-md-4">
-            <h3>Reset Password</h3>
-            {message && <div className="alert alert-success">{message}</div>}
-            {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit}>
+        <section className="card reset-password-card">
+            <h3 className="text-center mb-4">Reset Password</h3>
+            {message && <div className="form-success" role="alert">{message}</div>}
+            {error && <div className="form-error" role="alert">{error}</div>}
+            <form onSubmit={handleSubmit} className="form">
                 {!shouldHideEmail && (
-                    <div className="mb-3">
-                        <label>Email</label>
-                        <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} />
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} />
                     </div>
                 )}
-                <div className="mb-3">
-                    <label>Reset Code</label>
-                    <input type="text" className="form-control" name="code" value={formData.code} onChange={handleChange} />
+                <div className="form-group">
+                    <label htmlFor="code">Reset Code</label>
+                    <input type="text" id="code" name="code" value={formData.code} onChange={handleChange} />
                 </div>
-                <div className="mb-3">
-                    <label>New Password</label>
-                    <input type="password" className="form-control" name="newPassword" value={formData.newPassword} onChange={handleChange} />
+                <div className="form-group">
+                    <label htmlFor="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" value={formData.newPassword} onChange={handleChange} />
                 </div>
-                <button className="btn btn-primary w-100">Reset Password</button>
+                <button className="btn-primary full-width">Reset Password</button>
             </form>
-        </div>
+        </section>
     );
 }
 export default ResetPassword;

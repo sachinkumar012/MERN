@@ -3,10 +3,21 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AddIcon from '@mui/icons-material/Add';
+import LinkIcon from '@mui/icons-material/Link';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { serverEndpoint } from '../../config/config';
-import { Modal } from 'react-bootstrap';
 import { usePermission } from '../../rbac/userPermissions';
 import { useNavigate } from 'react-router-dom';
 
@@ -197,23 +208,34 @@ function LinksDashboard() {
     ];
 
     return (
-        <div className="container py-4">
-            <div className="d-flex justify-content-between mb-3">
-                <h2>Manage Affiliate Links</h2>
+        <Box className="dashboard-fullpage" sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+            <Paper elevation={2} sx={{ mb: 3, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <LinkIcon color="primary" sx={{ fontSize: 32 }} />
+                    <Typography variant="h5" component="h2" fontWeight={700} color="primary.main">
+                        Manage Affiliate Links
+                    </Typography>
+                </Box>
                 {permission.canCreateLink && (
-                    <button className="btn btn-primary btn-sm" onClick={() => handleOpenModal(false)}>
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        color="primary"
+                        onClick={() => handleOpenModal(false)}
+                        sx={{ borderRadius: 2, fontWeight: 600 }}
+                    >
                         Add
-                    </button>
+                    </Button>
                 )}
-            </div>
-
+            </Paper>
             {errors.message && (
-                <div className="alert alert-danger" role="alert">
-                    {errors.message}
-                </div>
+                <Box sx={{ mb: 2 }}>
+                    <Typography color="error" variant="body2" role="alert">
+                        {errors.message}
+                    </Typography>
+                </Box>
             )}
-
-            <div style={{ height: 500, width: '100%' }}>
+            <Paper elevation={1} sx={{ p: { xs: 1, sm: 2 }, borderRadius: 3, mb: 3 }}>
                 <DataGrid
                     getRowId={(row) => row._id}
                     rows={linksData}
@@ -225,102 +247,72 @@ function LinksDashboard() {
                     }}
                     pageSizeOptions={[20, 50, 100]}
                     disableRowSelectionOnClick
-                    showToolbar
                     sx={{
-                        fontFamily: 'inherit'
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        borderRadius: 'var(--border-radius)'
                     }}
                     density='compact'
                 />
-            </div>
-
-            <Modal show={showModal} onHide={() => handleCloseModal()}>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {isEdit ? (<>Update Link</>) : (<>Add Link</>)}
-                    </Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-3">
-                            <label htmlFor="campaignTitle" className="form-label">Campaign Title</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.campaignTitle ? 'is-invalid' : ''}`}
-                                id="campaignTitle"
-                                name="campaignTitle"
-                                value={formData.campaignTitle}
-                                onChange={handleChange}
-                            />
-                            {errors.campaignTitle && (
-                                <div className="invalid-feedback">
-                                    {errors.campaignTitle}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="originalUrl" className="form-label">URL</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.originalUrl ? 'is-invalid' : ''}`}
-                                id="originalUrl"
-                                name="originalUrl"
-                                value={formData.originalUrl}
-                                onChange={handleChange}
-                            />
-                            {errors.originalUrl && (
-                                <div className="invalid-feedback">
-                                    {errors.originalUrl}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="category" className="form-label">Category</label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.category ? 'is-invalid' : ''}`}
-                                id="category"
-                                name="category"
-                                value={formData.category}
-                                onChange={handleChange}
-                            />
-                            {errors.category && (
-                                <div className="invalid-feedback">
-                                    {errors.category}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="d-grid">
-                            <button type="submit" className="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </Modal.Body>
-            </Modal>
-
-            <Modal show={showDeleteModal} onHide={() => handleCloseDeleteModal()}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Delete</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Are you sure you want to delete the link?</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button className='btn btn-secondary'
-                        onClick={() => handleCloseDeleteModal()}
-                    >
-                        Cancel
-                    </button>
-                    <button className='btn btn-danger'
-                        onClick={() => handleDelete()}
-                    >
+            </Paper>
+            {/* Add/Edit Dialog */}
+            <Dialog open={showModal} onClose={handleCloseModal} maxWidth="xs" fullWidth>
+                <DialogTitle sx={{ background: 'var(--header-gradient)', color: '#fff' }}>
+                    {isEdit ? 'Update Link' : 'Add Link'}
+                </DialogTitle>
+                <DialogContent sx={{ py: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <TextField
+                            label="Campaign Title"
+                            name="campaignTitle"
+                            value={formData.campaignTitle}
+                            onChange={handleChange}
+                            error={!!errors.campaignTitle}
+                            helperText={errors.campaignTitle}
+                            fullWidth
+                        />
+                        <TextField
+                            label="URL"
+                            name="originalUrl"
+                            value={formData.originalUrl}
+                            onChange={handleChange}
+                            error={!!errors.originalUrl}
+                            helperText={errors.originalUrl}
+                            fullWidth
+                        />
+                        <TextField
+                            label="Category"
+                            name="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                            error={!!errors.category}
+                            helperText={errors.category}
+                            fullWidth
+                        />
+                        <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 1, fontWeight: 600 }}>
+                            {isEdit ? 'Update' : 'Add'}
+                        </Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+            {/* Delete Dialog */}
+            <Dialog open={showDeleteModal} onClose={handleCloseDeleteModal} maxWidth="xs" fullWidth>
+                <DialogTitle sx={{ background: 'var(--header-gradient)', color: '#fff' }}>Delete Link</DialogTitle>
+                <DialogContent>
+                    <Typography align="center" sx={{ my: 2 }}>
+                        Are you sure you want to delete this link?
+                    </Typography>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+                    <Button onClick={handleDelete} variant="contained" color="error" sx={{ fontWeight: 600 }}>
                         Delete
-                    </button>
-                </Modal.Footer>
-            </Modal>
-        </div>
+                    </Button>
+                    <Button onClick={handleCloseDeleteModal} variant="outlined" color="primary">
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
     );
 }
 

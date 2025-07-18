@@ -1,44 +1,38 @@
-import { Link } from "react-router-dom";
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
+import AdbIcon from '@mui/icons-material/Adb';
 
 function Header() {
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-body">
-            <div className="container">
-                <Link className="navbar-brand" to="/">
-                    Affiliate++
-                </Link>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
+        <AppBar position="static" color="primary" elevation={2}>
+            <Toolbar>
+                <AdbIcon sx={{ mr: 1 }} />
+                <Typography
+                    variant="h6"
+                    component={RouterLink}
+                    to="/"
+                    sx={{
+                        flexGrow: 1,
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        fontWeight: 700,
+                        letterSpacing: 1,
+                    }}
                 >
-                    <span className="navbar-toggler-icon" />
-                </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to="/">
-                                Home
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/login">
-                                Login
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/register">
-                                Register
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                    Affiliate++
+                </Typography>
+                <Box>
+                    <Button color="inherit" component={RouterLink} to="/">Home</Button>
+                    <Button color="inherit" component={RouterLink} to="/login">Login</Button>
+                    <Button color="inherit" component={RouterLink} to="/register">Register</Button>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
 

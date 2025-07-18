@@ -97,113 +97,83 @@ function PurchaseCredit() {
     };
 
     return (
-        <section className="ezy__pricing10 light py-5" id="ezy__pricing10">
-            <div className="container">
-                {errors.message && <div className="alert alert-danger">{errors.message}</div>}
-                {message && <div className="alert alert-success">{message}</div>}
-
-                <div className="d-flex justify-content-between align-items-start w-100">
-                    <div className="text-left">
-                        <h3 className="ezy__pricing10-heading">Choose Plan</h3>
-                        <p className="ezy__pricing10-sub-heading mt-3">
-                            Flexible options: one-time credits or recurring subscriptions.
-                        </p>
-                    </div>
-
-                    <div className="text-right">
-                        <h3>Current Balance</h3>
-                        <p className="ezy__pricing10-sub-heading mt-3">
-                            {userDetails.credits} Credits
-                        </p>
-                    </div>
+        <section className="purchase-section">
+            <div className="purchase-header-row">
+                <div>
+                    <h3>Choose Plan</h3>
+                    <p className="purchase-subheading">
+                        Flexible options: one-time credits or recurring subscriptions.
+                    </p>
                 </div>
-
-
-                <div className="row">
-                    {/* Credit Pack Card */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">Credit Packs</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {CREDIT_PACKS.map(c => (
-                                        <li className="pb-2" key={c}>
-                                            {c} CREDITS FOR ₹{c}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-                                    Buy Credits
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Monthly Plan */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">₹199/month</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {pricingList[1].list.map((item, i) => (
-                                        <li className="pb-2" key={i}>{item.detail}</li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => handleSubscribe('UNLIMITED_MONTHLY')}>
-                                    Subscribe Monthly
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Yearly Plan */}
-                    <div className="col-md-6 col-xl-4 mt-4 text-center">
-                        <div className="card ezy__pricing10-card p-4 border-0 rounded-0">
-                            <div className="card-body pt-4">
-                                <p className="ezy__pricing10-meta-price">
-                                    <span className="ezy__pricing10-rate">₹1990/year</span>
-                                </p>
-                            </div>
-                            <div className="card-body pb-4 p-0">
-                                <ul className="nav ezy__pricing10-nav flex-column">
-                                    {pricingList[2].list.map((item, i) => (
-                                        <li className="pb-2" key={i}>{item.detail}</li>
-                                    ))}
-                                </ul>
-                                <button className="btn btn-primary" onClick={() => handleSubscribe('UNLIMITED_YEARLY')}>
-                                    Subscribe Yearly
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div className="purchase-balance">
+                    <h3>Current Balance</h3>
+                    <p className="purchase-subheading">
+                        {userDetails.credits} Credits
+                    </p>
                 </div>
-
-                {/* React-Bootstrap Modal */}
-                <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Buy Credits</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className="text-center">
-                        {CREDIT_PACKS.map((c) => (
-                            <button
-                                key={c}
-                                className="m-2 btn btn-outline-primary"
-                                onClick={() => handleBuyCredits(c)}
-                            >
-                                Buy {c} Credits
-                            </button>
-                        ))}
-                    </Modal.Body>
-                </Modal>
             </div>
+
+            {errors.message && <div className="form-error">{errors.message}</div>}
+            {message && <div className="form-success">{message}</div>}
+
+            <div className="purchase-cards-row">
+                {/* Credit Pack Card */}
+                <div className="card purchase-card">
+                    <div className="purchase-card-title">Credit Packs</div>
+                    <ul className="purchase-list">
+                        {CREDIT_PACKS.map(c => (
+                            <li key={c}>{c} CREDITS FOR ₹{c}</li>
+                        ))}
+                    </ul>
+                    <button className="btn-primary full-width" onClick={() => setShowModal(true)}>
+                        Buy Credits
+                    </button>
+                </div>
+
+                {/* Monthly Plan */}
+                <div className="card purchase-card">
+                    <div className="purchase-card-title">₹199/month</div>
+                    <ul className="purchase-list">
+                        {pricingList[1].list.map((item, i) => (
+                            <li key={i}>{item.detail}</li>
+                        ))}
+                    </ul>
+                    <button className="btn-primary full-width" onClick={() => handleSubscribe('UNLIMITED_MONTHLY')}>
+                        Subscribe Monthly
+                    </button>
+                </div>
+
+                {/* Yearly Plan */}
+                <div className="card purchase-card">
+                    <div className="purchase-card-title">₹1990/year</div>
+                    <ul className="purchase-list">
+                        {pricingList[2].list.map((item, i) => (
+                            <li key={i}>{item.detail}</li>
+                        ))}
+                    </ul>
+                    <button className="btn-primary full-width" onClick={() => handleSubscribe('UNLIMITED_YEARLY')}>
+                        Subscribe Yearly
+                    </button>
+                </div>
+            </div>
+
+            {/* Modal for buying credits */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Buy Credits</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="purchase-modal-body">
+                    {CREDIT_PACKS.map((c) => (
+                        <button
+                            key={c}
+                            className="btn-primary m-2"
+                            onClick={() => handleBuyCredits(c)}
+                        >
+                            Buy {c} Credits
+                        </button>
+                    ))}
+                </Modal.Body>
+            </Modal>
         </section>
     );
 }

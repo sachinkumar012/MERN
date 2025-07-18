@@ -100,20 +100,18 @@ function AnalyticsDashboard() {
     }, [analyticsData, fromDate, toDate]);
 
     return (
-        <div className="container py-5">
-            <h1>Analytics for LinkID: {id}</h1>
+        <section className="card home-card">
+            <h1 className="dashboard-title">Analytics for LinkID: {id}</h1>
 
-            <div className="row mb-4 mx-0 border py-3 border">
+            <div className="dashboard-filters-row">
                 <h5>Filters:</h5>
-                <div className="col-md-2">
+                <div style={{ display: 'flex', gap: '1em', marginBottom: '1em' }}>
                     <DatePicker
                         selected={fromDate}
                         onChange={(date) => setFromDate(date)}
                         className="form-control"
                         placeholderText="From (Date)"
                     />
-                </div>
-                <div className="col-md-2">
                     <DatePicker
                         selected={toDate}
                         onChange={(date) => setToDate(date)}
@@ -123,8 +121,8 @@ function AnalyticsDashboard() {
                 </div>
             </div>
 
-            <div className="row mb-4 mx-0 border py-3 rounded">
-                <div className="col-md-8 p-3 rounded mt-2">
+            <div className="dashboard-charts-row" style={{ display: 'flex', gap: '2em', flexWrap: 'wrap', marginBottom: '2em' }}>
+                <div style={{ flex: 2, minWidth: 300, background: 'var(--surface-accent)', borderRadius: 'var(--border-radius)', boxShadow: 'var(--card-shadow)', padding: '1.5em' }}>
                     <h5>Clicks by City</h5>
                     <hr />
                     <Bar
@@ -139,11 +137,9 @@ function AnalyticsDashboard() {
                             ]
                         }}
                         options={{ responsive: true }}
-
                     />
                 </div>
-
-                <div className="col-md-4 p-3 rounded mt-2">
+                <div style={{ flex: 1, minWidth: 220, background: 'var(--surface-accent)', borderRadius: 'var(--border-radius)', boxShadow: 'var(--card-shadow)', padding: '1.5em' }}>
                     <h5>Clicks by Browser</h5>
                     <hr />
                     <Pie
@@ -168,23 +164,27 @@ function AnalyticsDashboard() {
                 </div>
             </div>
 
-            <DataGrid
-                getRowId={(row) => row._id}
-                rows={analyticsData}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { pageSize: 20, page: 0 }
-                    }
-                }}
-                pageSizeOptions={[20, 50, 100]}
-                disableRowSelectionOnClick
-                showToolbar
-                sx={{
-                    fontFamily: 'inherit'
-                }}
-            />
-        </div>
+            <div style={{ background: 'var(--surface-accent)', borderRadius: 'var(--border-radius)', boxShadow: 'var(--card-shadow)', marginTop: '1.5em' }}>
+                <DataGrid
+                    getRowId={(row) => row._id}
+                    rows={analyticsData}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { pageSize: 20, page: 0 }
+                        }
+                    }}
+                    pageSizeOptions={[20, 50, 100]}
+                    disableRowSelectionOnClick
+                    showToolbar
+                    sx={{
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        borderRadius: 'var(--border-radius)'
+                    }}
+                />
+            </div>
+        </section>
     );
 }
 
