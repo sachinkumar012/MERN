@@ -9,10 +9,21 @@ const paymentRoutes = require('./src/routes/paymentRoutes');
 const cors = require('cors');
 const app = express();
 
-app.use(cors({
-    origin: "https://mern-client-1g67.onrender.com",
+const allowedOrigins = [
+    "https://mern-pink-six.vercel.app", // ✅ Only allow new frontend
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Blocked by CORS"));
+      }
+    },
     credentials: true
-}));
+  }));
+  
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))
