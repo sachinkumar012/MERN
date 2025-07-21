@@ -191,7 +191,7 @@ const linksController = {
                 || request.socket.remoteAddress;
 
             const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
-            const { city, country, region, lat, lon, isp  } = geoResponse.data;
+            const { city, country, region, lat, lon, isp } = geoResponse.data;
 
             const userAgent = request.headers['user-agent'] || 'unknown';
             const { isMobile, browser } = getDeviceInfo(userAgent);
@@ -262,6 +262,30 @@ const linksController = {
             return response.status(500).json({
                 message: 'Internal server error'
             });
+        }
+    },
+    summary: async (request, response) => {
+        try {
+            const userId = request.user.role === 'admin' ? request.user.id : request.user.adminId;
+            // Total links
+            const totalLinks = await Links.countDocuments({ user: userId });
+            // Total clicks (sum of clickCount for all links)
+            const links = await Links.find({ user: userId }, 'clickCount createdAt');
+            const totalClicks = links.reduce((sum, link) => sum + (link.clickCount || 0), 0);
+            // Links added in last 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const recentLinks = await Links.countDocuments({ user: userId, createdAt: { $gte: thirtyDaysAgo } });
+            response.json({
+                data: {
+                    totalLinks,
+                    totalClicks,
+                    recentLinks
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            response.status(500).json({ error: 'Internal server error' });
         }
     },
 };

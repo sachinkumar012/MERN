@@ -21,7 +21,7 @@ import { serverEndpoint } from '../../config/config';
 import { usePermission } from '../../rbac/userPermissions';
 import { useNavigate } from 'react-router-dom';
 
-function LinksDashboard() {
+function LinksDashboard({ onLinksChanged }) {
     const [errors, setErrors] = useState({});
     const [linksData, setLinksData] = useState([]);
     const navigate = useNavigate();
@@ -49,6 +49,7 @@ function LinksDashboard() {
                 withCredentials: true
             });
             await fetchLinks();
+            if (onLinksChanged) onLinksChanged();
             handleCloseDeleteModal();
         } catch (error) {
             setErrors({ message: 'Unable to delete the link, please try again' });
@@ -135,6 +136,7 @@ function LinksDashboard() {
                 }
 
                 await fetchLinks();
+                if (onLinksChanged) onLinksChanged();
                 setFormData({
                     campaignTitle: "",
                     originalUrl: "",
@@ -169,9 +171,16 @@ function LinksDashboard() {
         {
             field: 'originalUrl', headerName: 'URL', flex: 3, renderCell: (params) => (
                 <>
-                    <a href={`${serverEndpoint}/links/r/${params.row._id}`}
+                    <a
+                        href={`${serverEndpoint}/links/r/${params.row._id}`}
                         target='_blank'
                         rel="noopener noreferrer"
+                        onClick={() => {
+                            // Wait a bit for backend to update, then refresh summary
+                            setTimeout(() => {
+                                if (onLinksChanged) onLinksChanged();
+                            }, 800);
+                        }}
                     >
                         {params.row.originalUrl}
                     </a>
@@ -209,12 +218,40 @@ function LinksDashboard() {
 
     return (
         <Box className="dashboard-fullpage" sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-            <Paper elevation={2} sx={{ mb: 3, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <LinkIcon color="primary" sx={{ fontSize: 32 }} />
-                    <Typography variant="h5" component="h2" fontWeight={700} color="primary.main">
-                        Manage Affiliate Links
-                    </Typography>
+            <Paper elevation={6} sx={{
+                mb: 3,
+                p: { xs: 2, sm: 3 },
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderRadius: 4,
+                background: 'linear-gradient(120deg, rgba(24,32,48,0.92) 60%, rgba(34,58,94,0.92) 100%)',
+                boxShadow: '0 8px 32px 0 rgba(31,38,135,0.18)',
+                border: '2.5px solid #4fc3f7',
+                position: 'relative',
+                overflow: 'visible',
+            }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, position: 'relative' }}>
+                    <Box sx={{
+                        width: 54,
+                        height: 54,
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #4fc3f7 0%, #223a5e 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 12px #4fc3f755',
+                        mr: 2,
+                    }}>
+                        <LinkIcon sx={{ fontSize: 32, color: '#fff' }} />
+                    </Box>
+                    <Box>
+                        <Typography variant="h4" component="h2" fontWeight={800} sx={{ color: '#fff', letterSpacing: 1, textShadow: '0 2px 12px #0008, 0 1px 0 #223a5e', mb: 0.5 }}>
+                            Manage Affiliate Links
+                        </Typography>
+                        {/* Animated underline */}
+                        <Box sx={{ height: 4, width: 60, background: 'linear-gradient(90deg, #4fc3f7 0%, #ffb74d 100%)', borderRadius: 2, mt: 0.5, animation: 'pulseUnderline 2.5s infinite alternate' }} />
+                    </Box>
                 </Box>
                 {permission.canCreateLink && (
                     <Button
@@ -222,12 +259,34 @@ function LinksDashboard() {
                         startIcon={<AddIcon />}
                         color="primary"
                         onClick={() => handleOpenModal(false)}
-                        sx={{ borderRadius: 2, fontWeight: 600 }}
+                        sx={{
+                            borderRadius: 3,
+                            fontWeight: 700,
+                            fontSize: '1.08rem',
+                            px: 3,
+                            py: 1.1,
+                            background: 'linear-gradient(90deg, #4fc3f7 0%, #223a5e 100%)',
+                            color: '#fff',
+                            boxShadow: '0 2px 12px #4fc3f755',
+                            transition: 'background 0.2s, box-shadow 0.2s',
+                            '&:hover': {
+                                background: 'linear-gradient(90deg, #223a5e 0%, #4fc3f7 100%)',
+                                color: '#fff',
+                                boxShadow: '0 4px 18px #4fc3f799',
+                            },
+                        }}
                     >
-                        Add
+                        Add Link
                     </Button>
                 )}
             </Paper>
+            {/* Add animated underline keyframes */}
+            <style>{`
+                @keyframes pulseUnderline {
+                    0% { opacity: 0.7; transform: scaleX(1); }
+                    100% { opacity: 1; transform: scaleX(1.15); }
+                }
+            `}</style>
             {errors.message && (
                 <Box sx={{ mb: 2 }}>
                     <Typography color="error" variant="body2" role="alert">
@@ -235,7 +294,14 @@ function LinksDashboard() {
                     </Typography>
                 </Box>
             )}
-            <Paper elevation={1} sx={{ p: { xs: 1, sm: 2 }, borderRadius: 3, mb: 3 }}>
+            {/* Remove Paper wrapper, make DataGrid float with modern style */}
+            <Box sx={{
+                borderRadius: 3,
+                boxShadow: '0 2px 16px 0 rgba(31,38,135,0.10)',
+                background: 'none',
+                mb: 3,
+                overflow: 'hidden',
+            }}>
                 <DataGrid
                     getRowId={(row) => row._id}
                     rows={linksData}
@@ -249,12 +315,41 @@ function LinksDashboard() {
                     disableRowSelectionOnClick
                     sx={{
                         fontFamily: 'inherit',
-                        background: 'transparent',
-                        borderRadius: 'var(--border-radius)'
+                        background: 'rgba(24,32,48,0.85)',
+                        borderRadius: 3,
+                        border: '1.5px solid #223a5e',
+                        boxShadow: '0 2px 16px 0 rgba(31,38,135,0.10)',
+                        color: '#222',
+                        '.MuiDataGrid-columnHeaders': {
+                            background: 'linear-gradient(90deg, #181e2c 0%, #223a5e 100%)',
+                            color: '#222',
+                            fontWeight: 800,
+                            fontSize: '1.01em',
+                            borderBottom: '1.5px solid #223a5e',
+                        },
+                        '.MuiDataGrid-cell': {
+                            fontSize: '1em',
+                            color: '#222',
+                            fontWeight: 600,
+                        },
+                        '.MuiDataGrid-footerContainer': {
+                            background: 'rgba(24,32,48,0.92)',
+                            color: '#222',
+                        },
+                        '.MuiTablePagination-root': {
+                            color: '#222',
+                        },
+                        '.MuiDataGrid-row': {
+                            transition: 'background 0.2s',
+                            '&:hover': {
+                                background: 'rgba(79,195,247,0.07)',
+                            },
+                        },
+                        border: 'none',
                     }}
                     density='compact'
                 />
-            </Paper>
+            </Box>
             {/* Add/Edit Dialog */}
             <Dialog open={showModal} onClose={handleCloseModal} maxWidth="xs" fullWidth>
                 <DialogTitle sx={{ background: 'var(--header-gradient)', color: '#fff' }}>

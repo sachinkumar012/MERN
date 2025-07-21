@@ -187,7 +187,7 @@ function ManageUsers() {
     ];
 
     return (
-        <section className="card home-card">
+        <section>
             <div className="dashboard-header-row">
                 <h2 className="dashboard-title">Manage Users</h2>
                 <button className='btn-primary' onClick={() => handleModalShow(false)}>Add</button>
@@ -199,7 +199,7 @@ function ManageUsers() {
                 </div>
             )}
 
-            <div style={{ height: 500, width: '100%', background: 'var(--surface-accent)', borderRadius: 'var(--border-radius)', boxShadow: 'var(--card-shadow)', marginTop: '1.5em' }}>
+            <div style={{ height: 500, width: '100%', marginTop: '1.5em' }}>
                 <DataGrid
                     getRowId={(row) => row._id}
                     rows={usersData}
@@ -215,7 +215,9 @@ function ManageUsers() {
                     sx={{
                         fontFamily: 'inherit',
                         background: 'transparent',
-                        borderRadius: 'var(--border-radius)'
+                        border: 'none',
+                        boxShadow: 'none',
+                        borderRadius: 0,
                     }}
                     loading={loading}
                 />

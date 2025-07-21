@@ -6,6 +6,14 @@ import { serverEndpoint } from "../../config/config";
 import { SET_USER } from "../../redux/user/actions";
 import './PurchaseCredit.css';
 import { Modal } from "react-bootstrap";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import StarIcon from '@mui/icons-material/Star';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 function PurchaseCredit() {
     const dispatch = useDispatch();
@@ -98,18 +106,43 @@ function PurchaseCredit() {
 
     return (
         <section className="purchase-section">
-            <div className="purchase-header-row">
-                <div>
-                    <h3>Choose Plan</h3>
-                    <p className="purchase-subheading">
-                        Flexible options: one-time credits or recurring subscriptions.
-                    </p>
+            {/* Modern Attractive Header */}
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2.5rem 1rem 2rem 1rem',
+                marginBottom: '2.5rem',
+                borderRadius: '1.5rem',
+                background: 'linear-gradient(120deg, #1976d2 60%, #43a047 100%)',
+                color: '#fff',
+                boxShadow: '0 8px 32px 0 rgba(31,38,135,0.18)',
+                position: 'relative',
+                overflow: 'visible',
+                maxWidth: 700,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            }}>
+                <PaymentsIcon style={{ fontSize: 60, color: '#fff', marginBottom: 12, filter: 'drop-shadow(0 2px 12px #0008)' }} />
+                <h1 style={{ fontWeight: 900, fontSize: '2.2rem', letterSpacing: 1, margin: 0, textShadow: '0 2px 12px #0008, 0 1px 0 #223a5e' }}>
+                    Payment & Credits
+                </h1>
+                <div style={{ fontSize: '1.15rem', opacity: 0.95, margin: '0.7rem 0 1.2rem 0', fontWeight: 500, textAlign: 'center', maxWidth: 500 }}>
+                    Choose the best way to power your campaigns: buy credits or subscribe for unlimited access.
                 </div>
-                <div className="purchase-balance">
-                    <h3>Current Balance</h3>
-                    <p className="purchase-subheading">
-                        {userDetails.credits} Credits
-                    </p>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    background: 'rgba(255,255,255,0.13)',
+                    borderRadius: '2rem',
+                    padding: '0.4rem 1.2rem',
+                    fontWeight: 700,
+                    fontSize: '1.08rem',
+                    boxShadow: '0 2px 8px #0002',
+                }}>
+                    <AccountBalanceWalletIcon style={{ marginRight: 8, color: '#fff' }} />
+                    Balance: {userDetails.credits} Credits
                 </div>
             </div>
 
@@ -119,39 +152,51 @@ function PurchaseCredit() {
             <div className="purchase-cards-row">
                 {/* Credit Pack Card */}
                 <div className="card purchase-card">
-                    <div className="purchase-card-title">Credit Packs</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 8 }}>
+                        <CreditCardIcon style={{ fontSize: 40, color: '#1976d2', marginBottom: 4 }} />
+                        <div className="purchase-card-title">Credit Packs</div>
+                    </div>
                     <ul className="purchase-list">
                         {CREDIT_PACKS.map(c => (
                             <li key={c}>{c} CREDITS FOR ₹{c}</li>
                         ))}
                     </ul>
                     <button className="btn-primary full-width" onClick={() => setShowModal(true)}>
+                        <ShoppingCartIcon style={{ verticalAlign: 'middle', marginRight: 8 }} />
                         Buy Credits
                     </button>
                 </div>
 
                 {/* Monthly Plan */}
                 <div className="card purchase-card">
-                    <div className="purchase-card-title">₹199/month</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 8 }}>
+                        <CalendarMonthIcon style={{ fontSize: 40, color: '#43a047', marginBottom: 4 }} />
+                        <div className="purchase-card-title">₹199/month</div>
+                    </div>
                     <ul className="purchase-list">
                         {pricingList[1].list.map((item, i) => (
                             <li key={i}>{item.detail}</li>
                         ))}
                     </ul>
                     <button className="btn-primary full-width" onClick={() => handleSubscribe('UNLIMITED_MONTHLY')}>
+                        <AutorenewIcon style={{ verticalAlign: 'middle', marginRight: 8 }} />
                         Subscribe Monthly
                     </button>
                 </div>
 
                 {/* Yearly Plan */}
                 <div className="card purchase-card">
-                    <div className="purchase-card-title">₹1990/year</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 8 }}>
+                        <StarIcon style={{ fontSize: 40, color: '#ffb300', marginBottom: 4 }} />
+                        <div className="purchase-card-title">₹1990/year</div>
+                    </div>
                     <ul className="purchase-list">
                         {pricingList[2].list.map((item, i) => (
                             <li key={i}>{item.detail}</li>
                         ))}
                     </ul>
                     <button className="btn-primary full-width" onClick={() => handleSubscribe('UNLIMITED_YEARLY')}>
+                        <WorkspacePremiumIcon style={{ verticalAlign: 'middle', marginRight: 8 }} />
                         Subscribe Yearly
                     </button>
                 </div>
