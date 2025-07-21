@@ -9,23 +9,19 @@ const paymentRoutes = require('./src/routes/paymentRoutes');
 const cors = require('cors');
 const app = express();
 
-// const allowedOrigins = [
-//     "https://mern-pink-six.vercel.app", 
-//   ];
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Blocked by CORS"));
-//     }
-//   },
-//   credentials: true
-// }));
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://mern-pink-six.vercel.app',
+];
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS'));
+    }
+  },
   credentials: true,
 }));
 
