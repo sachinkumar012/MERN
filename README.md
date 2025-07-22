@@ -95,7 +95,7 @@ NODE_ENV=production
 
 ```bash
 https://github.com/sachinkumar012/MERN.git
- cd affiliate-plus
+cd MERN-1
 ```
 
 ---
